@@ -1,0 +1,39 @@
+version: "3.6"
+
+services:
+  snippetsalinadb:
+    image: postgres
+    container_name: "snippetsalinadb"
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=snippetbox
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=04317740
+    networks:
+      - fullstack
+    volumes:
+      - database_postgres:/var/lib/postgresql/data
+
+  snippetsalinaweb:
+    build: .
+    container_name: "snippetsalinaweb"
+    environment:
+      - DB_PASSWORD=04317740
+      - DB_DB=snippetbox
+      - DB_HOST=db
+      - DB_TABLE=snippets
+      - DB_PORT=5432
+    ports:
+      - '4000:4000'
+    depends_on:
+      - snippetsalinadb
+    networks:
+      - fullstack
+
+volumes:
+  database_postgres:
+
+networks:
+  fullstack:
+    driver: bridge
